@@ -108,8 +108,9 @@ IDENTIFIER = r'''
 # `nth` content
 NTH = r'(?:[-+])?(?:[0-9]+n?|n)(?:(?<=n){ws}*(?:[-+]){ws}*(?:[0-9]+))?'.format(ws=WSC)
 # Value: quoted string or identifier
+# (quoted string alternatives must not overlap to avoid catastrophic backtracking on unclosed strings)
 VALUE = r'''
-(?:"(?:\\(?:.|{nl})|[^\\"\r\n\f]+)*?"|'(?:\\(?:.|{nl})|[^\\'\r\n\f]+)*?'|{ident}+)
+(?:"(?:\\(?:[^\r\n\f]|{nl})|[^\\"\r\n\f])*?"|'(?:\\(?:[^\r\n\f]|{nl})|[^\\'\r\n\f])*?'|{ident}+)
 '''.format(nl=NEWLINE, ident=IDENTIFIER)
 # Attribute value comparison. `!=` is handled special as it is non-standard.
 ATTR = r'''

@@ -307,3 +307,10 @@ class TestSoupContains(util.TestCase):
             # Verify some things
             self.assertTrue(len(w) == 1)
             self.assertTrue(issubclass(w[-1].category, FutureWarning))
+
+    def test_contains_unclosed_quotes(self):
+        """Test contains with unclosed quotes fails for syntax error, not timeout error."""
+
+        self.assert_raises_no_timeout('div:-soup-contains("' + ('x' * 300), sv.SelectorSyntaxError)
+        self.assert_raises_no_timeout("div:-soup-contains('" + ('x' * 300), sv.SelectorSyntaxError)
+        self.assert_raises_no_timeout('div:-soup-contains("a", "' + ('x' * 300), sv.SelectorSyntaxError)

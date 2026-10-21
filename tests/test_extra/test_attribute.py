@@ -1,4 +1,5 @@
 """Test attribute selectors."""
+import soupsieve as sv
 from .. import util
 
 
@@ -50,3 +51,25 @@ class TestAttribute(util.TestCase):
             ["div", "0", "1", "2", "3", "pre", "4", "6"],
             flags=util.HTML5
         )
+
+    def test_bad_attribute_unclused(self):
+        """Test bad attribute fails for syntax error, not timeout error."""
+
+        self.assert_raises_no_timeout('[a="' + ('x' * 300), sv.SelectorSyntaxError)
+
+    def test_bad_attribute_unclosed_single_quote(self):
+        """Test bad attribute with unclosed single quotes fails for syntax error, not timeout error."""
+
+        self.assert_raises_no_timeout("[a='" + ('x' * 300), sv.SelectorSyntaxError)
+
+    def test_bad_attribute_unclosed_escaped_form_feed(self):
+        """Test bad attribute with unclosed quotes and escaped form feeds fails for syntax error, not timeout error."""
+
+        self.assert_raises_no_timeout('[a="' + ('\\\f' * 300), sv.SelectorSyntaxError)
+        self.assert_raises_no_timeout("[a='" + ('\\\f' * 300), sv.SelectorSyntaxError)
+
+    def test_bad_attribute_unclosed_escaped_carriage_return(self):
+        """Test bad attribute with unclosed quotes and escaped carriage returns fails for syntax error, not timeout."""
+
+        self.assert_raises_no_timeout('[a="' + ('\\\r' * 300), sv.SelectorSyntaxError)
+        self.assert_raises_no_timeout("[a='" + ('\\\r' * 300), sv.SelectorSyntaxError)
